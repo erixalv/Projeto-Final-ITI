@@ -84,14 +84,14 @@ vector<int> loadCompressed(const string& filename) {
 }
 
 int main() {
-    string inputFilename = "input.txt";
-    string compressedFilename = "comprimido.bin";
-    string decompressedFilename = "descomprimido.txt";
+    string romance1 = "romance2.txt";
+    string compressedFilename = "comprimido2.bin";
+    string decompressedFilename = "descomprimido2.txt";
 
     // Ler o conteúdo do arquivo de entrada
-    ifstream inFile(inputFilename);
+    ifstream inFile(romance1);
     if (!inFile) {
-        cerr << "Erro ao abrir " << inputFilename << endl;
+        cerr << "Erro ao abrir " << romance1 << endl;
         return 1;
     }
 
