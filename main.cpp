@@ -39,21 +39,25 @@ int main() {
     // Arquivos de treino por gênero
     std::vector<std::string> romanceFiles = {"romance/romance1.txt", "romance/romance2.txt", "romance/romance3.txt", "romance/romance4.txt", "romance/romance5.txt"};
     std::vector<std::string> fantasiaFiles = {"fantasia/fantasia1.txt", "fantasia/fantasia2.txt"};
+    std::vector<std::string> terrorFiles = {"terror/1.txt", "terror/2.txt", "terror/3.txt", "terror/4.txt", "terror/5.txt"};
 
     // Treinamento
     std::string romanceCorpus = loadText(romanceFiles);
     std::string fantasiaCorpus = loadText(fantasiaFiles);
+    std::string terrorCorpus = loadText(terrorFiles);
 
     std::unordered_map<std::string, int> romanceDict = LZWCompressor::generateDictionary(romanceCorpus);
     std::unordered_map<std::string, int> fantasiaDict = LZWCompressor::generateDictionary(fantasiaCorpus);
+    std::unordered_map<std::string, int> terrorDict = LZWCompressor::generateDictionary(terrorCorpus); 
 
     std::map<std::string, std::unordered_map<std::string, int>> genreDicts = {
         {"Romance", romanceDict},
-        {"Fantasia", fantasiaDict}
+        {"Fantasia", fantasiaDict},
+        {"Terror", terrorDict}
     };
 
     // Arquivos de teste
-    std::vector<std::string> testFiles = {"teste1.txt", "teste2.txt"};
+    std::vector<std::string> testFiles = {"teste1.txt", "teste2.txt", "teste3.txt"};
 
     for (const auto& testFile : testFiles) {
         std::string testText = loadText({testFile});
