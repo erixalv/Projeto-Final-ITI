@@ -57,7 +57,7 @@ int main() {
     };
 
     // Arquivos de teste
-    std::vector<std::string> testFiles = {"teste1.txt", "teste2.txt", "teste3.txt"};
+    std::vector<std::string> testFiles = {"teste1.txt", "teste2.txt", "teste3.txt", "teste4.txt", "teste5.txt", "teste6.txt", "teste7.txt", "teste8.txt", "teste9.txt"};
 
     for (const auto& testFile : testFiles) {
         std::string testText = loadText({testFile});
