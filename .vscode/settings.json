@@ -43,6 +43,7 @@
         "typeinfo": "cpp",
         "ctime": "cpp",
         "set": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "bitset": "cpp"
     }
 }
