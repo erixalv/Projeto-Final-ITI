@@ -9,73 +9,76 @@
 
 class LZWCompressor {
 public:
-    static std::unordered_map<std::string, int> generateDictionary(const std::string& input) {
+    // Comprime uma string usando o algoritmo LZW
+    static std::vector<int> compress(const std::string& input) {
         std::unordered_map<std::string, int> dictionary;
-        for (int i = 0; i < 256; i++)
+        // Inicializa o dicionário com caracteres ASCII
+        for (int i = 0; i < 256; i++) {
             dictionary[std::string(1, char(i))] = i;
+        }
 
         std::string w;
+        std::vector<int> result;
         int dictSize = 256;
 
         for (char c : input) {
             std::string wc = w + c;
-            if (dictionary.count(wc))
+            if (dictionary.find(wc) != dictionary.end()) {
                 w = wc;
-            else {
+            } else {
+                result.push_back(dictionary[w]);
                 dictionary[wc] = dictSize++;
                 w = std::string(1, c);
             }
         }
 
-        return dictionary;
-    }
-
-    static std::vector<int> compressWithDictionary(const std::string& input, const std::unordered_map<std::string, int>& baseDict) {
-        auto dictionary = baseDict;
-        std::string w;
-        std::vector<int> result;
-        int dictSize = dictionary.size();
-
-        for (char c : input) {
-            std::string wc = w + c;
-            if (dictionary.count(wc))
-                w = wc;
-            else {
-                result.push_back(dictionary.at(w));
-                dictionary[wc] = dictSize++;
-                w = std::string(1, c);
-            }
+        // Não se esqueça do último código
+        if (!w.empty()) {
+            result.push_back(dictionary[w]);
         }
-
-        if (!w.empty())
-            result.push_back(dictionary.at(w));
 
         return result;
     }
 
+    // Descomprime uma sequência de códigos usando o algoritmo LZW
     static std::string decompress(const std::vector<int>& compressed) {
+        // Caso de entrada vazia
+        if (compressed.empty()) {
+            return "";
+        }
+
         std::unordered_map<int, std::string> dictionary;
-        for (int i = 0; i < 256; i++)
+        // Inicializa o dicionário com caracteres ASCII
+        for (int i = 0; i < 256; i++) {
             dictionary[i] = std::string(1, char(i));
+        }
 
         int dictSize = 256;
-        std::string w = dictionary[compressed[0]];
-        std::string result = w;
-
+        int oldCode = compressed[0];
+        std::string result = dictionary[oldCode];
+        std::string entry;
+        
         for (size_t i = 1; i < compressed.size(); i++) {
-            int k = compressed[i];
-            std::string entry;
-
-            if (dictionary.count(k))
-                entry = dictionary[k];
-            else if (k == dictSize)
-                entry = w + w[0];
-            else
-                throw std::runtime_error("Erro na descompressao");
-
+            int currentCode = compressed[i];
+            
+            // Caso especial: código ainda não existe no dicionário
+            if (currentCode == dictSize) {
+                entry = dictionary[oldCode] + dictionary[oldCode][0];
+            } 
+            // Caso normal: código já existe no dicionário
+            else if (dictionary.find(currentCode) != dictionary.end()) {
+                entry = dictionary[currentCode];
+            } 
+            // Caso de erro: código não existe e não é o próximo a ser adicionado
+            else {
+                throw std::runtime_error("Código inválido encontrado durante a descompressão");
+            }
+            
             result += entry;
-            dictionary[dictSize++] = w + entry[0];
-            w = entry;
+            
+            // Adiciona nova sequência ao dicionário
+            dictionary[dictSize++] = dictionary[oldCode] + entry[0];
+            oldCode = currentCode;
         }
 
         return result;
